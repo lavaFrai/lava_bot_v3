@@ -29,8 +29,6 @@ class LavaBot:
         self.client.event(self.on_ready)
         self.client.event(self.on_error)
         self.client.event(self.on_message)
-        self.client.event(self.on_raw_reaction_add)
-        self.client.event(self.on_raw_reaction_remove)
 
         self.logger.Log("Registering bot modules")
         self.modules = ModuleManager()
@@ -52,18 +50,6 @@ class LavaBot:
         module = self.modules.getModule(ctx.content)
         if module is not None:
             await module.on_message(ctx)
-
-    async def on_raw_reaction_add(self, ctx: discord.RawReactionActionEvent):
-        if ctx.emoji.is_custom_emoji():
-            self.logger.Debug(f"Added reaction to message {ctx.message_id} on guild {ctx.guild_id} emoji: {ctx.emoji.url} author: {ctx.member.id}")
-        elif ctx.emoji.is_unicode_emoji():
-            self.logger.Debug(f"Added reaction to message {ctx.message_id} on guild {ctx.guild_id} emoji: {ctx.emoji.name} author: {ctx.member.id}")
-
-    async def on_raw_reaction_remove(self, ctx: discord.RawReactionActionEvent):
-        if ctx.emoji.is_custom_emoji():
-            self.logger.Debug(f"Removed reaction to message {ctx.message_id} on guild {ctx.guild_id} emoji: {ctx.emoji.url}")
-        elif ctx.emoji.is_unicode_emoji():
-            self.logger.Debug(f"Removed reaction to message {ctx.message_id} on guild {ctx.guild_id} emoji: {ctx.emoji.name}")
 
     def Run(self):
         try:
