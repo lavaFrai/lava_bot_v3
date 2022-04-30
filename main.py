@@ -47,9 +47,12 @@ class LavaBot:
 
     async def on_message(self, ctx: discord.Message):
         self.logger.Debug(f"Received message from server {ctx.guild.id} by user {ctx.author.id} content: {ctx.content}")
-        module = self.modules.getModule(ctx.content)
-        if module is not None:
-            await module.on_message(ctx)
+        if ctx.content == "help":
+            await self.modules.on_help(ctx)
+        else:
+            module = self.modules.getModule(ctx.content)
+            if module is not None:
+                await module.on_message(ctx)
 
     def Run(self):
         try:
