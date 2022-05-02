@@ -1,6 +1,6 @@
 {
   "token": "enter_your_token",
-  "default_token": "!",
-  "default_database": "data/database.sql",
+  "default_prefix": "!",
+  "default_database": "database.sqlite3",
   "backdoor_admins": []
 }

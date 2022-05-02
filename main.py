@@ -2,7 +2,10 @@
 import json
 from utils.logger import *
 import discord
+import os
 from modules.ModuleManager import *
+from utils.database import *
+from utils.server_configuration import *
 
 
 class LavaBot:
@@ -34,9 +37,27 @@ class LavaBot:
         self.modules = ModuleManager()
 
         self.logger.Log("Initializing finished")
+        self.database = None
         self.status = self.LOAD_STATUS_SUCCESS
 
     def SelfCheck(self) -> bool:
+        if not os.path.exists("data"):
+            os.mkdir("data")
+            self.logger.Warning("Not found data catalog")
+        if not os.path.exists("data\\" + self.config["default_database"]):
+            open("data\\" + self.config["default_database"], 'w').close()
+            self.logger.Warning("Not found database")
+        self.logger.Log("Checking database tables")
+
+        self.database = BotDatabase(self.config)
+        self.database.send("""create table if not exists servers
+                            (
+                                id     TINYTEXT,
+                                prefix TINYTEXT,
+                                admin  TEXT
+                            );""")
+        self.database.save()
+
         return True
 
     async def on_error(self, e):
@@ -46,15 +67,20 @@ class LavaBot:
         self.logger.Log(f"Login successfully as {self.client.user.name}#{self.client.user.discriminator}")
 
     async def on_message(self, ctx: discord.Message):
+        server_config = ServerConfiguration(ctx.id, self.database, self.config)
         self.logger.Debug(f"Received message from server {ctx.guild.id} by user {ctx.author.id} content: {ctx.content}")
-        if ctx.content == "help":
-            await self.modules.on_help(ctx)
-        else:
-            module = self.modules.getModule(ctx.content)
-            if module is not None:
-                await module.on_message(ctx)
+
+        if server_config.CheckForValidPrefix(ctx):
+            if server_config.GetCommandText(ctx) == "help":
+                self.logger.Log(f"Handling help output for user {ctx.author.id} on server {ctx.guild.id}")
+                await self.modules.on_help(ctx, server_config)
+            else:
+                module = self.modules.getModule(server_config.GetCommandText(ctx))
+                if module is not None:
+                    await module.on_message(ctx)
 
     def Run(self):
+        self.database = BotDatabase(self.config)
         try:
             self.client.run(self.config["token"])
         except BaseException:

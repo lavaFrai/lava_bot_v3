@@ -27,7 +27,7 @@ class Logger:
 
     def Warning(self, text):
         if self.log_level <= self.LOG_LEVEL_WARNING:
-            self.printText(f"{time.strftime('%a, %d %b %Y %H:%M:%S UTC%z')} [WARNING]\t\t" + text)
+            self.printText(f"{time.strftime('%a, %d %b %Y %H:%M:%S UTC%z')} [WARNING]\t" + text)
 
     def Error(self, text):
         if self.log_level <= self.LOG_LEVEL_ERROR:
