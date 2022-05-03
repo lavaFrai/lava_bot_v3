@@ -3,18 +3,23 @@ import json
 import discord
 
 from utils.database import *
+from utils.b64 import *
 
 
 class ServerConfiguration:
-    def __init__(self, id: int, database: BotDatabase, bot_config):
-        self.id = id
-        self.request = database.get(f"""select * from servers where id='{id}'""")
+    def __init__(self, ctx: discord.Message, database: BotDatabase, bot_config):
+        self.id = ctx.guild.id
+        self.ctx = ctx
+        self.database = database
+        self.request = database.get(f"""select * from servers where id='{self.id}'""")
         if len(self.request) == 0:
-            database.send(f"""insert into servers values ('{id}', '{bot_config["default_prefix"]}', '{"[]"}')""")
+            database.send(f"""insert into servers values ('{self.id}', '{b64toBytes(bot_config["default_prefix"])}', '{"[]"}')""")
             database.save()
-            self.request = database.get(f"""select * from servers where id='{id}'""")[0]
-        self.prefix = self.request[1]
-        self.admins = json.JSONDecoder().decode(self.request[2])
+            self.request = database.get(f"""select * from servers where id='{self.id}'""")
+        self.request = self.request[0]
+
+        self.prefix = b64fromBytes(self.request[1])
+        self.admins: list = json.JSONDecoder().decode(self.request[2])
 
     def CheckForValidPrefix(self, ctx: discord.Message) -> bool:
         return ctx.content.strip().startswith(self.prefix) or ctx.content.strip().startswith(f"<@{ctx.guild.me.id}>")
@@ -42,3 +47,21 @@ class ServerConfiguration:
             rPtr += 1
 
         return message[lPtr:rPtr]
+
+    def SetNewPrefix(self, prefix: str):
+        self.database.send(f"""update servers set prefix='{b64toBytes(prefix)}' where id='{self.id}'""")
+        self.database.save()
+        self.prefix = prefix
+
+    def IsUserAdmin(self, user_id: int):
+        return user_id in self.admins or user_id == self.ctx.guild.owner_id
+
+    def AddAdministrator(self, id: int):
+        self.database.send(f"""update servers set admin='{json.JSONEncoder().encode(self.admins + [id])}' where id='{self.id}'""")
+        self.database.save()
+        self.admins += [id]
+
+    def RemoveAdministrator(self, id: int):
+        self.admins.remove(id)
+        self.database.send(f"""update servers set admin='{json.JSONEncoder().encode(self.admins)}' where id='{self.id}'""")
+        self.database.save()

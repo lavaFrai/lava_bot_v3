@@ -67,7 +67,7 @@ class LavaBot:
         self.logger.Log(f"Login successfully as {self.client.user.name}#{self.client.user.discriminator}")
 
     async def on_message(self, ctx: discord.Message):
-        server_config = ServerConfiguration(ctx.id, self.database, self.config)
+        server_config = ServerConfiguration(ctx, self.database, self.config)
         self.logger.Debug(f"Received message from server {ctx.guild.id} by user {ctx.author.id} content: {ctx.content}")
 
         if server_config.CheckForValidPrefix(ctx):
@@ -77,7 +77,7 @@ class LavaBot:
             else:
                 module = self.modules.getModule(server_config.GetCommandText(ctx))
                 if module is not None:
-                    await module.on_message(ctx)
+                    await module.on_message(ctx, self.client, self.database, self.config, server_config)
 
     def Run(self):
         self.database = BotDatabase(self.config)

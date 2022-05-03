@@ -1,6 +1,7 @@
 import discord
 from modules.Information.debuginfo import DebugInfo
 from modules.ServerControls.prefix import SetPrefix
+from modules.ServerControls.addAdmin import AdminControls
 from utils.server_configuration import *
 
 
@@ -10,6 +11,7 @@ class ModuleManager:
         self.Categories = set()
 
         # Administration
+        self.Modules.append(AdminControls())
         self.Modules.append(SetPrefix())
         # Information
         self.Modules.append(DebugInfo())
@@ -19,7 +21,7 @@ class ModuleManager:
 
     def getModule(self, name: str):
         for i in self.Modules:
-            if i.name == name:
+            if i.name.lower() == name.lower():
                 return i
         return None
 
@@ -28,7 +30,7 @@ class ModuleManager:
         for category_name in self.Categories:
             description += f"\n**{category_name}**\n"
             for module in filter(lambda x: x.category == category_name, self.Modules):
-                description += f"`{server_config.prefix}{module.name}` "
+                description += f"`{server_config.prefix} {module.name}` "
 
         await ctx.reply(embed=discord.Embed(
             title="Available commands:",
