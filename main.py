@@ -60,8 +60,8 @@ class LavaBot:
 
         return True
 
-    async def on_error(self, e):
-        self.logger.Warning(f"In runtime detected error: {e}")
+    async def on_error(self, event, *args, **kwargs):
+        self.logger.Warning(f"In runtime detected error: {event}")
 
     async def on_ready(self):
         self.logger.Log(f"Login successfully as {self.client.user.name}#{self.client.user.discriminator}")

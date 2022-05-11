@@ -7,6 +7,7 @@ from utils.server_configuration import *
 
 class Module:
     MODULE_CATEGORY_INFORMATION = "Information"
+    MODULE_CATEGORY_MODERATION = "Moderation"
     MODULE_CATEGORY_ADMINISTRATION = "Administration"
 
     def __init__(self, name: str, category: str, description: str = None, examples: list = None):

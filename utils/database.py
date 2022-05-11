@@ -22,4 +22,4 @@ class BotDatabase:
 
     def save(self):
         self.ram_db.backup(self.db)
-        self.ram_db.commit()
+        self.db.commit()

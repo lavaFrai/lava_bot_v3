@@ -32,5 +32,3 @@ class SetPrefix(Module):
                     title="Server prefix",
                     description=f"Sorry, you need a server administrator for this action"
                 ))
-
-
