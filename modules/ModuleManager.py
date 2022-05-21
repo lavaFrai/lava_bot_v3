@@ -5,6 +5,7 @@ from modules.ServerControls.addAdmin import AdminControls
 from modules.Moderation.Kick import *
 from modules.Moderation.Ban import *
 from modules.Moderation.Mute import *
+from modules.NSFW.hentai import *
 from utils.server_configuration import *
 
 
@@ -16,10 +17,12 @@ class ModuleManager:
         # Administration
         self.Modules.append(AdminControls())
         self.Modules.append(SetPrefix())
+
         # Moderation
         self.Modules.append(KickMember())
         self.Modules.append(BanMember())
-        self.Modules.append(MuteMember())
+        # self.Modules.append(MuteMember())
+
         # Information
         self.Modules.append(DebugInfo())
 

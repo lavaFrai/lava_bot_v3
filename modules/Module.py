@@ -9,6 +9,7 @@ class Module:
     MODULE_CATEGORY_INFORMATION = "Information"
     MODULE_CATEGORY_MODERATION = "Moderation"
     MODULE_CATEGORY_ADMINISTRATION = "Administration"
+    MODULE_CATEGORY_NSFW = "NSFW"
 
     def __init__(self, name: str, category: str, description: str = None, examples: list = None):
         self.logger = Logger(Logger.LOG_LEVEL_DEBUG)
