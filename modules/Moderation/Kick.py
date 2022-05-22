@@ -4,6 +4,7 @@ from modules.Module import *
 from utils.server_configuration import *
 from utils.typical_answers import *
 from utils.ping_parser import *
+from utils.embed import *
 
 
 class KickMember(Module):
@@ -19,7 +20,8 @@ class KickMember(Module):
             except discord.Forbidden:
                 await TypicalAnswers.NotEnoughRights("Kick member", ctx)
             else:
-                await ctx.reply(embed=discord.Embed(
+                await ctx.reply(embed=Embed(
+                    ctx=ctx,
                     title="Kick member",
                     description="Ready, member kicked"
                 ))

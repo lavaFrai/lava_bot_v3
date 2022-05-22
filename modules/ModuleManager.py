@@ -26,12 +26,16 @@ class ModuleManager:
         # Information
         self.Modules.append(DebugInfo())
 
+        # NSFW
+        self.Modules.append(Hentai())
+
         for i in self.Modules:
             self.Categories.add(i.category)
 
     def getModule(self, name: str):
+        name = name.lower()
         for i in self.Modules:
-            if i.name.lower() == name.lower():
+            if i.IsAliasFor(name):
                 return i
         return None
 

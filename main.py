@@ -30,7 +30,7 @@ class LavaBot:
 
         self.logger.Log("Registering bot events")
         self.client.event(self.on_ready)
-        self.client.event(self.on_error)
+        # self.client.event(self.on_error)
         self.client.event(self.on_message)
 
         self.logger.Log("Registering bot modules")

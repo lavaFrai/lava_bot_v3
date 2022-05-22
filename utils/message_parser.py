@@ -19,3 +19,6 @@ class MessageParser:
 
     def __len__(self):
         return len(self.parsedContent)
+
+    def __getitem__(self, item):
+        return self.parsedContent[item]

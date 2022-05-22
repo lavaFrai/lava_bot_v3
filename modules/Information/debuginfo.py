@@ -1,6 +1,7 @@
 import discord
 
 from modules.Module import *
+from utils.embed import *
 
 
 class DebugInfo(Module):
@@ -10,7 +11,8 @@ class DebugInfo(Module):
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
         super().on_message(ctx, client, database, bot_config, server_config)
 
-        await ctx.reply(embed=discord.Embed(
+        await ctx.reply(embed=Embed(
+            ctx=ctx,
             title="Debug Information",
             description=f"Guild id: {ctx.guild.id}\n"
                         f"Author id: {ctx.author.id}\n"

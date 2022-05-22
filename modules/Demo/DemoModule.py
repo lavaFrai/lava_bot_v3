@@ -1,5 +1,6 @@
 from modules.Module import *
 from utils.server_configuration import *
+from utils.embed import *
 
 
 class DemoModule(Module):
@@ -11,12 +12,14 @@ class DemoModule(Module):
 
         if server_config.IsUserAdmin(ctx.author.id):
             server_config.SetNewPrefix(self.parse.parsedContent[0])
-            await ctx.reply(embed=discord.Embed(
+            await ctx.reply(embed=Embed(
+                ctx=ctx,
                 title="Demonstration",
                 description=f"Hello, admin!"
             ))
         else:
-            await ctx.reply(embed=discord.Embed(
+            await ctx.reply(embed=Embed(
+                ctx=ctx,
                 title="Demonstration",
                 description=f"Hello, member!"
             ))

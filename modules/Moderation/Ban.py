@@ -4,6 +4,7 @@ from modules.Module import *
 from utils.server_configuration import *
 from utils.typical_answers import *
 from utils.ping_parser import *
+from utils.embed import *
 
 
 class BanMember(Module):
@@ -19,7 +20,8 @@ class BanMember(Module):
             except discord.Forbidden:
                 await TypicalAnswers.NotEnoughRights("Ban member", ctx)
             else:
-                await ctx.reply(embed=discord.Embed(
+                await ctx.reply(embed=Embed(
+                    ctx=ctx,
                     title="Ban member",
                     description="Ready, member banned"
                 ))
