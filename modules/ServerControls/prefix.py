@@ -9,7 +9,9 @@ from utils.embed import *
 
 class SetPrefix(Module):
     def __init__(self):
-        super().__init__("prefix", Module.MODULE_CATEGORY_ADMINISTRATION)
+        super().__init__("prefix", Module.MODULE_CATEGORY_ADMINISTRATION,
+                         description="Set new bot prefix for this server",
+                         examples="<new_prefix>")
 
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
         super().on_message(ctx, client, database, bot_config, server_config)
@@ -19,7 +21,7 @@ class SetPrefix(Module):
                 ctx=ctx,
                 title="Server prefix",
                 description=f"Current server prefix is `{server_config.prefix}`\n"
-                            f"Type `{server_config.prefix} prefix <new prefix>` to set new prefix"
+                            f"Type `{server_config.prefix}prefix <new prefix>` to set new prefix"
             ))
         else:
             if server_config.IsUserAdmin(ctx.author.id):
@@ -28,7 +30,7 @@ class SetPrefix(Module):
                     ctx=ctx,
                     title="Server prefix",
                     description=f"Ready, current server prefix is `{server_config.prefix}`\n"
-                                f"Type `{server_config.prefix} prefix <new prefix>` to set new prefix"
+                                f"Type `{server_config.prefix}prefix <new prefix>` to set new prefix"
                 ))
             else:
                 await ctx.reply(embed=Embed(

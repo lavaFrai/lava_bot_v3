@@ -10,7 +10,11 @@ from utils.embed import *
 
 class AdminControls(Module):
     def __init__(self):
-        super().__init__("admin", Module.MODULE_CATEGORY_ADMINISTRATION)
+        super().__init__("admin", Module.MODULE_CATEGORY_ADMINISTRATION,
+                         description="Add, remove or show list of administrators",
+                         examples="list\n"
+                                  "add <member_ping>\n"
+                                  "remove <member_ping>")
 
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config,
                          server_config: ServerConfiguration):

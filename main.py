@@ -70,7 +70,7 @@ class LavaBot:
         server_config = ServerConfiguration(ctx, self.database, self.config)
         self.logger.Debug(f"Received message from server {ctx.guild.id} by user {ctx.author.id} content: {ctx.content}")
 
-        if server_config.CheckForValidPrefix(ctx):
+        if server_config.CheckForValidPrefix(ctx) and not ctx.author.bot:
             if server_config.GetCommandText(ctx) == "help":
                 self.logger.Log(f"Handling help output for user {ctx.author.id} on server {ctx.guild.id}")
                 await self.modules.on_help(ctx, server_config)

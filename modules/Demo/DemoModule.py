@@ -5,7 +5,10 @@ from utils.embed import *
 
 class DemoModule(Module):
     def __init__(self):
-        super().__init__("test", "Demo")
+        super().__init__("test", "Demo",
+                         description="Demonstration module",
+                         examples="<arg1> - and about it \n"
+                                  "<arg1> <arg2>")
 
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
         super().on_message(ctx, client, database, bot_config, server_config)

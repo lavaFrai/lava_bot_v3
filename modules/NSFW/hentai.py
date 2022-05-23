@@ -14,7 +14,10 @@ from utils.embed import *
 class Hentai(Module):
     def __init__(self):
         super().__init__("hentai", Module.MODULE_CATEGORY_NSFW,
-                         aliases=["hent"])
+                         aliases=["hent"],
+                         description="Sends a picture with NSFW content",
+                         examples="\n"
+                                  "<tag>")
 
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config,
                          server_config: ServerConfiguration):

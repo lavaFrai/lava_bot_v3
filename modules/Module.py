@@ -16,7 +16,7 @@ class Module:
         self.name = name
         self.category = category
         self.description = description
-        self.examples = examples
+        self.examples: str = examples
         self.parse: MessageParser = None
         self.aliases = aliases
         if aliases is not None:

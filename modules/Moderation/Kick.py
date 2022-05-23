@@ -9,7 +9,9 @@ from utils.embed import *
 
 class KickMember(Module):
     def __init__(self):
-        super().__init__("kick", Module.MODULE_CATEGORY_MODERATION)
+        super().__init__("kick", Module.MODULE_CATEGORY_MODERATION,
+                         description="Kick member by mention",
+                         examples="<member_ping>")
 
     async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
         super().on_message(ctx, client, database, bot_config, server_config)
