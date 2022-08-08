@@ -4,8 +4,8 @@ from utils.embed import *
 
 class TypicalAnswers:
     @staticmethod
-    async def NeedAdmin(title, ctx: discord.Message):
-        await ctx.reply(embed=Embed(
+    async def NeedAdmin(title, ctx: OnMessageEventInfo):
+        await ctx.message.reply(embed=Embed(
             ctx=ctx,
             error=True,
             title=title,
@@ -13,8 +13,8 @@ class TypicalAnswers:
         ))
 
     @staticmethod
-    async def NotEnoughRights(title, ctx: discord.Message):
-        await ctx.reply(embed=Embed(
+    async def NotEnoughRights(title, ctx: OnMessageEventInfo):
+        await ctx.message.reply(embed=Embed(
             ctx=ctx,
             error=True,
             title=title,

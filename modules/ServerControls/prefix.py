@@ -13,27 +13,27 @@ class SetPrefix(Module):
                          description="Set new bot prefix for this server",
                          examples="<new_prefix>")
 
-    async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
-        super().on_message(ctx, client, database, bot_config, server_config)
+    async def on_message(self, ctx: OnMessageEventInfo):
+        parsed_content = MessageParser(ctx)
 
-        if len(self.parse) == 0:
-            await ctx.reply(embed=Embed(
+        if len(parsed_content) == 0:
+            await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Server prefix",
-                description=f"Current server prefix is `{server_config.prefix}`\n"
-                            f"Type `{server_config.prefix}prefix <new prefix>` to set new prefix"
+                description=f"Current server prefix is `{ctx.server_config.prefix}`\n"
+                            f"Type `{ctx.server_config.prefix}prefix <new prefix>` to set new prefix"
             ))
         else:
-            if server_config.IsUserAdmin(ctx.author.id):
-                server_config.SetNewPrefix(self.parse.parsedContent[0])
-                await ctx.reply(embed=Embed(
+            if ctx.server_config.IsUserAdmin(ctx.message.author.id):
+                ctx.server_config.SetNewPrefix(self.parse.parsedContent[0])
+                await ctx.message.reply(embed=Embed(
                     ctx=ctx,
                     title="Server prefix",
-                    description=f"Ready, current server prefix is `{server_config.prefix}`\n"
-                                f"Type `{server_config.prefix}prefix <new prefix>` to set new prefix"
+                    description=f"Ready, current server prefix is `{ctx.server_config.prefix}`\n"
+                                f"Type `{ctx.server_config.prefix}prefix <new prefix>` to set new prefix"
                 ))
             else:
-                await ctx.reply(embed=Embed(
+                await ctx.message.reply(embed=Embed(
                     ctx=ctx,
                     error=True,
                     title="Server prefix",

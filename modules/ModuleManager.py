@@ -1,10 +1,16 @@
 import discord
 from modules.Information.debuginfo import DebugInfo
+from modules.Information.hostinfo import HostInfo
 from modules.ServerControls.prefix import SetPrefix
 from modules.ServerControls.addAdmin import AdminControls
 from modules.Moderation.Kick import *
 from modules.Moderation.Ban import *
 from modules.NSFW.hentai import *
+from modules.Utilites.Avatar import *
+from modules.Utilites.Random import *
+from modules.Utilites.Calc import *
+from modules.Fun.Coin import *
+from modules.Fun.EightBall import *
 from utils.server_configuration import *
 from utils.embed import *
 
@@ -25,9 +31,19 @@ class ModuleManager:
 
         # Information
         # self.Modules.append(DebugInfo())
+        self.Modules.append(HostInfo())
 
         # NSFW
         self.Modules.append(Hentai())
+
+        # Utils
+        self.Modules.append(Avatar())
+        # self.Modules.append(Calc())
+        self.Modules.append(Random())
+
+        # Fun
+        self.Modules.append(Coin())
+        self.Modules.append(EightBall())
 
         for i in self.Modules:
             self.Categories.add(i.category)
@@ -40,17 +56,17 @@ class ModuleManager:
                 return i
         return None
 
-    async def on_help(self, ctx: discord.Message, server_config: ServerConfiguration):
-        parse = MessageParser(ctx, server_config)
+    async def on_help(self, ctx: OnMessageEventInfo):
+        parse = MessageParser(ctx)
 
         if len(parse) == 0:
-            description = f"You can also view each category in more detail by `{server_config.prefix}help <category name>`\n" \
+            description = f"You can also view each category in more detail by `{ctx.server_config.prefix}help <category name>`\n" \
                           f"**Don't use `<` and `>` symbols in command**\n"
             for category_name in self.Categories:
                 description += f"\n**{category_name}**\n > "
                 for module in filter(lambda x: x.category == category_name, self.Modules):
-                    description += f"`{server_config.prefix}{module.name}` "
-            await ctx.reply(embed=Embed(
+                    description += f"`{ctx.server_config.prefix}{module.name}` "
+            await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Available commands:",
                 description=description
@@ -58,11 +74,12 @@ class ModuleManager:
 
         else:
             if parse[0].lower() not in self.CategoriesLower:
-                await ctx.reply(embed=Embed(
+                await ctx.message.reply(embed=Embed(
                     ctx=ctx,
                     error=True,
                     title="Available commands",
-                    description=f"The `{parse[0].lower()}` category does not exist"
+                    description=f"The `{parse[0].lower()}` category does not exist\n"
+                                f"Maybe need to remove `<` and `>` symbols from category name"
                 ))
 
             else:
@@ -78,10 +95,10 @@ class ModuleManager:
                     if module.examples is not None:
                         description += '```\n'
                         for example in module.examples.split('\n'):
-                            description += f"{server_config.prefix}{module.name.lower()} {example}\n"
+                            description += f"{ctx.server_config.prefix}{module.name.lower()} {example}\n"
                         description += '\n```'
 
-                await ctx.reply(embed=Embed(
+                await ctx.message.reply(embed=Embed(
                     ctx=ctx,
                     title=f"Available commands in `{parse[0].lower()}`:",
                     description=description

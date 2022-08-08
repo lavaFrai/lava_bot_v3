@@ -9,6 +9,7 @@ from utils.typical_answers import *
 from utils.ping_parser import *
 from utils.hentai import *
 from utils.embed import *
+from utils.nsfwMiddleware import *
 
 
 class Hentai(Module):
@@ -19,21 +20,14 @@ class Hentai(Module):
                          examples="\n"
                                   "<tag>")
 
-    async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config,
-                         server_config: ServerConfiguration):
-        super().on_message(ctx, client, database, bot_config, server_config)
-
-        if not ctx.channel.is_nsfw():
-            await ctx.reply(embed=Embed(ctx=ctx,
-                                        error=True,
-                                        title="Hentai",
-                                        description=f"Sorry, i can't send that in this channel, it is not NSFW channel"))
-            return
+    @onlyNSFWMiddleware
+    async def on_message(self, ctx: OnMessageEventInfo):
+        super().on_message(ctx)
 
         hentai = HentaiGenerator()
 
         if len(self.parse) == 0:
-            await ctx.reply(embed=Embed(
+            await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Hentai"
             ).set_image(
@@ -41,7 +35,7 @@ class Hentai(Module):
             ))
         else:
             if self.parse.parsedContent[0] in hentai.possible:
-                await ctx.reply(embed=Embed(
+                await ctx.message.reply(embed=Embed(
                     ctx=ctx,
                     title="Hentai",
                     description=self.parse.parsedContent[0]
@@ -49,6 +43,7 @@ class Hentai(Module):
                     url=hentai.GetRandomUrl(self.parse.parsedContent[0])
                 ))
             else:
-                await ctx.reply(embed=Embed(ctx=ctx,
-                                            title="Hentai",
-                                            description=f"Category must be one of this list: \n```" + '\n'.join(hentai.possible) + "```"))
+                await ctx.message.reply(embed=Embed(ctx=ctx,
+                                                    title="Hentai",
+                                                    description=f"Category must be one of this list: \n```" + '\n'.join(
+                                                        hentai.possible) + "```"))

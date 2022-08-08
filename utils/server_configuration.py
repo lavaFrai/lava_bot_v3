@@ -48,6 +48,30 @@ class ServerConfiguration:
 
         return message[lPtr:rPtr]
 
+    def GetRealText(self, ctx: discord.Message) -> str:
+        message = str(ctx.content)
+        lPtr = 0
+        _prefix = self.prefix
+
+        # skipping prefix
+        if message.startswith(_prefix):
+            lPtr = len(_prefix)
+        else:
+            lPtr = message.find('>') + 1
+        if lPtr >= len(message):
+            return ""
+
+        # skipping whitespace
+        while (lPtr < len(message)) and (message[lPtr] in ' \n\t\r'):
+            lPtr += 1
+
+        # reading keyword
+        rPtr = lPtr
+        while (rPtr < len(message)) and (message[rPtr] not in ' \n\t\r'):
+            rPtr += 1
+
+        return message[rPtr:]
+
     def SetNewPrefix(self, prefix: str):
         self.database.send(f"""update servers set prefix='{b64toBytes(prefix)}' where id='{self.id}'""")
         self.database.save()

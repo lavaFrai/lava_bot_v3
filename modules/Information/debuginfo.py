@@ -8,13 +8,13 @@ class DebugInfo(Module):
     def __init__(self):
         super().__init__("debuginfo", Module.MODULE_CATEGORY_INFORMATION)
 
-    async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config, server_config: ServerConfiguration):
-        super().on_message(ctx, client, database, bot_config, server_config)
+    async def on_message(self, ctx: OnMessageEventInfo):
+        super().on_message(ctx)
 
-        await ctx.reply(embed=Embed(
+        await ctx.message.reply(embed=Embed(
             ctx=ctx,
             title="Debug Information",
-            description=f"Guild id: {ctx.guild.id}\n"
-                        f"Author id: {ctx.author.id}\n"
-                        f"Message id: {ctx.id}\n"
+            description=f"Guild id: {ctx.message.guild.id}\n"
+                        f"Author id: {ctx.message.author.id}\n"
+                        f"Message id: {ctx.message.id}\n"
         ))

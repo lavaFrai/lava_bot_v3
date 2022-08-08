@@ -16,53 +16,52 @@ class AdminControls(Module):
                                   "add <member_ping>\n"
                                   "remove <member_ping>")
 
-    async def on_message(self, ctx: discord.Message, client: discord.Client, database: BotDatabase, bot_config,
-                         server_config: ServerConfiguration):
-        super().on_message(ctx, client, database, bot_config, server_config)
-        if server_config.IsUserAdmin(ctx.author.id):
+    async def on_message(self, ctx: OnMessageEventInfo):
+        super().on_message(ctx)
+        if ctx.server_config.IsUserAdmin(ctx.message.author.id):
             if len(self.parse) == 0:
-                await ctx.reply(embed=Embed(
+                await ctx.message.reply(embed=Embed(
                     error=True,
                     ctx=ctx,
                     title="Administrator controls",
-                    description=f"Type `{server_config.prefix} admin [add / remove / list]`"
+                    description=f"Type `{ctx.server_config.prefix} admin [add / remove / list]`"
                 ))
             else:
                 if len(self.parse) == 1:
                     if self.parse.parsedContentLower[0] == "list":
-                        await ctx.reply(embed=Embed(
+                        await ctx.message.reply(embed=Embed(
                             ctx=ctx,
                             title="Server admins list",
                             description="Current server admins:\n" + "\n".join(
-                                [f"<@{i}>" for i in server_config.admins + [ctx.guild.owner_id]]) + "\n"
+                                [f"<@{i}>" for i in ctx.server_config.admins + [ctx.message.guild.owner_id]]) + "\n"
                         ))
                     else:
-                        await ctx.reply(embed=Embed(
+                        await ctx.message.reply(embed=Embed(
                             error=True,
                             ctx=ctx,
                             title="Administrator controls",
-                            description=f"Type `{server_config.prefix} admin [add / remove] <member ping>`"
+                            description=f"Type `{ctx.server_config.prefix} admin [add / remove] <member ping>`"
                         ))
                 else:
                     try:
                         user = ParsePing(self.parse.parsedContent[1])
                     except BaseException:
-                        await ctx.reply(embed=Embed(
+                        await ctx.message.reply(embed=Embed(
                             ctx=ctx,
                             error=True,
                             title="Administrator controls",
-                            description=f"Type `{server_config.prefix} admin [add / remove] <member ping>`"
+                            description=f"Type `{ctx.server_config.prefix} admin [add / remove] <member ping>`"
                         ))
                     else:
-                        if user.id == client.user.id:
-                            await ctx.reply(embed=Embed(
+                        if user.id == ctx.client.user.id:
+                            await ctx.message.reply(embed=Embed(
                                 ctx=ctx,
                                 error=True,
                                 title="Administrator controls",
                                 description=f"Error, i'm unconditional server admin"
                             ))
-                        elif user.id == ctx.guild.owner_id:
-                            await ctx.reply(embed=Embed(
+                        elif user.id == ctx.message.guild.owner_id:
+                            await ctx.message.reply(embed=Embed(
                                 ctx=ctx,
                                 error=True,
                                 title="Administrator controls",
@@ -70,44 +69,44 @@ class AdminControls(Module):
                             ))
                         else:
                             if self.parse.parsedContentLower[0] == "list":
-                                await ctx.reply(embed=Embed(
+                                await ctx.message.reply(embed=Embed(
                                     ctx=ctx,
                                     title="Server admins list",
                                     description="Current server admins:\n" + "\n".join(
-                                        [f"<@{i}>" for i in server_config.admins + [ctx.guild.owner_id]]) + "\n"
+                                        [f"<@{i}>" for i in ctx.server_config.admins + [ctx.message.guild.owner_id]]) + "\n"
                                 ))
                             elif self.parse.parsedContentLower[0] == "add":
-                                if user.id in server_config.admins:
-                                    await ctx.reply(embed=Embed(
+                                if user.id in ctx.server_config.admins:
+                                    await ctx.message.reply(embed=Embed(
                                         ctx=ctx,
                                         error=True,
                                         title="Administrator controls",
                                         description=f"Error, <@{user.id}> already server admin"
                                     ))
                                 else:
-                                    server_config.AddAdministrator(user.id)
-                                    await ctx.reply(embed=Embed(
+                                    ctx.server_config.AddAdministrator(user.id)
+                                    await ctx.message.reply(embed=Embed(
                                         ctx=ctx,
                                         title="New administrator",
                                         description=f"Ready, {self.parse.parsedContent[1]} is new administrator"
                                     ))
                             elif self.parse.parsedContentLower[0] == "remove":
-                                if user.id not in server_config.admins:
-                                    await ctx.reply(embed=Embed(
+                                if user.id not in ctx.server_config.admins:
+                                    await ctx.message.reply(embed=Embed(
                                         ctx=ctx,
                                         error=True,
                                         title="Administrator controls",
                                         description=f"Error, <@{user.id}> isn't server admin"
                                     ))
                                 else:
-                                    server_config.RemoveAdministrator(user.id)
-                                    await ctx.reply(embed=Embed(
+                                    ctx.server_config.RemoveAdministrator(user.id)
+                                    await ctx.message.reply(embed=Embed(
                                         ctx=ctx,
                                         title="Remove administrator",
                                         description=f"Ready, {self.parse.parsedContent[1]} is no longer an administrator"
                                     ))
         else:
-            await ctx.reply(embed=Embed(
+            await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 error=True,
                 title="Administrator controls",

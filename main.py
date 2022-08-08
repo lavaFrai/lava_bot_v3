@@ -23,6 +23,7 @@ class LavaBot:
                 self.config = json.JSONDecoder().decode(f.read())
         except FileNotFoundError:
             self.logger.Error("Failed to load config")
+            return
 
         # creating discord client
         self.logger.Log("Creating discord.client object")
@@ -73,11 +74,13 @@ class LavaBot:
         if server_config.CheckForValidPrefix(ctx) and not ctx.author.bot:
             if server_config.GetCommandText(ctx) == "help":
                 self.logger.Log(f"Handling help output for user {ctx.author.id} on server {ctx.guild.id}")
-                await self.modules.on_help(ctx, server_config)
+                context = OnMessageEventInfo(ctx, self.client, self.database, self.config, server_config, None)
+                await self.modules.on_help(context)
             else:
                 module = self.modules.getModule(server_config.GetCommandText(ctx))
                 if module is not None:
-                    await module.on_message(ctx, self.client, self.database, self.config, server_config)
+                    context = OnMessageEventInfo(ctx, self.client, self.database, self.config, server_config, module)
+                    await module.on_message(context)
 
     def Run(self):
         self.database = BotDatabase(self.config)

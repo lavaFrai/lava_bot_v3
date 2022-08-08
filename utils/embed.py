@@ -3,15 +3,17 @@ import time
 
 import discord
 
+from modules.OnMessageEventInfo import *
+
 
 class Embed(discord.Embed):
-    def __init__(self, ctx: discord.Message = None, error: bool = False, **args):
+    def __init__(self, ctx: OnMessageEventInfo, error: bool = False, **args):
 
         if ctx is not None:
             # self.set_author(name=ctx.author.display_name,
             #                 icon_url=ctx.author.avatar_url)
-            self.set_footer(text=f"Executed for {ctx.author.display_name}",
-                            icon_url=ctx.author.avatar_url)
+            self.set_footer(text=f"Executed for {ctx.message.author.display_name} | {ctx.client.user.name}",
+                            icon_url=ctx.message.author.avatar_url)
 
         with open("config/colors.json", 'r') as f:
             colors = json.JSONDecoder().decode(f.read())
