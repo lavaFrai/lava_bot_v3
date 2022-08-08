@@ -12,3 +12,8 @@
 4) ```bash
     python main.py
     ```
+
+   or alternative version:
+    ```bash
+    docker run -it -d $(docker build -q .)
+    ```

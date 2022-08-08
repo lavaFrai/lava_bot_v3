@@ -4,7 +4,6 @@ from utils.logger import *
 import discord
 import os
 from modules.ModuleManager import *
-from utils.database import *
 from utils.server_configuration import *
 
 

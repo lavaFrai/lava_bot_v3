@@ -17,6 +17,13 @@ class Coin(Module):
                          description="Flips a coin and tells you if your guess was right.",
                          examples="<your_ask>")
 
+    @staticmethod
+    def notBet(bet):
+        if bet == "heads":
+            return "tails"
+        else:
+            return "heads"
+
     async def on_message(self, ctx: OnMessageEventInfo):
         super().on_message(ctx)
 
@@ -45,5 +52,5 @@ class Coin(Module):
             await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Coin",
-                description=f"The coin landed on `{bet}` and **you lost!**",
+                description=f"The coin landed on `{self.notBet(bet)}` and **you lost!**",
             ))
