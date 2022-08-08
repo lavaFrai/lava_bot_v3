@@ -14,9 +14,9 @@ class SetPrefix(Module):
                          examples="<new_prefix>")
 
     async def on_message(self, ctx: OnMessageEventInfo):
-        parsed_content = MessageParser(ctx)
+        super().on_message(ctx)
 
-        if len(parsed_content) == 0:
+        if len(self.parse.parsedContent) == 0:
             await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Server prefix",
