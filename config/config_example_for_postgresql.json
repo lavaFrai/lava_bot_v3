@@ -1,0 +1,15 @@
+{
+  "token": "enter_your_token",
+  "default_prefix": "!",
+  "default_database": "database.sqlite3",
+  "backdoor_admins": [],
+  "version": "1.0r",
+  "client_id": 0,
+
+  "database_type": "postgresql",
+  "database_host": "db.example.com",
+  "database_port": "5432",
+  "database_name": "dbuser",
+  "database_user": "dbname",
+  "database_password": "qwerty123"
+}

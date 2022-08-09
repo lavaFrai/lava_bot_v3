@@ -2,12 +2,12 @@ import json
 
 import discord
 
-from utils.database import *
+from utils.dbDriver.sqlite import *
 from utils.b64 import *
 
 
 class ServerConfiguration:
-    def __init__(self, ctx: discord.Message, database: BotDatabase, bot_config):
+    def __init__(self, ctx: discord.Message, database, bot_config):
         self.id = ctx.guild.id
         self.ctx = ctx
         self.database = database

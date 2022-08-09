@@ -1,5 +1,9 @@
 # https://discord.com/oauth2/authorize?client_id=811539043778297857&scope=bot&permissions=8
 import json
+
+from utils.dbDriver.postgesql import BotDatabasePostgresql
+from utils.dbDriver.sqlite import BotDatabaseSqlite
+
 from utils.logger import *
 import discord
 import os
@@ -10,6 +14,11 @@ from utils.server_configuration import *
 class LavaBot:
     LOAD_STATUS_FAIL = -1
     LOAD_STATUS_SUCCESS = 0
+
+    DATABASE_DRIVERS = {
+        "sqlite3": BotDatabaseSqlite,
+        "postgresql": BotDatabasePostgresql
+    }
 
     def __init__(self, config_file="config/config.json"):
         self.logger = Logger(Logger.LOG_LEVEL_DEBUG)
@@ -41,6 +50,7 @@ class LavaBot:
         self.status = self.LOAD_STATUS_SUCCESS
 
     def SelfCheck(self) -> bool:
+        """
         if not os.path.exists("data"):
             os.mkdir("data")
             self.logger.Warning("Not found data catalog")
@@ -48,14 +58,26 @@ class LavaBot:
             open("data\\" + self.config["default_database"], 'w').close()
             self.logger.Warning("Not found database")
         self.logger.Log("Checking database tables")
+        """
+        self.logger.Log("Running database self check")
 
-        self.database = BotDatabase(self.config)
+        if self.config["database_type"] not in self.DATABASE_DRIVERS:
+            self.logger.Error("Not found default database driver")
+            return False
+
+        self.database = self.DATABASE_DRIVERS[self.config['database_type']](self.config)
+
+        self.database.selfCheck()
+
+        self.logger.Log("Database initializing")
+        self.database.init()
+        self.logger.Log("Database tables checking")
         self.database.send("""create table if not exists servers
-                            (
-                                id     TINYTEXT,
-                                prefix TINYTEXT,
-                                admin  TEXT
-                            );""")
+                                    (
+                                        id     TEXT,
+                                        prefix TEXT,
+                                        admin  TEXT
+                                    );""")
         self.database.save()
 
         return True
@@ -82,8 +104,8 @@ class LavaBot:
                     await module.on_message(context)
 
     def Run(self):
-        self.database = BotDatabase(self.config)
         try:
+            self.logger.Log("Starting bot...")
             self.client.run(self.config["token"])
         except BaseException:
             self.logger.Error("Failed to login by token")

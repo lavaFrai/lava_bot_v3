@@ -32,6 +32,7 @@ class HostInfo(Module):
                         f"RAM:\t  **{round(ram_info.used / 1024 / 1024 / 1024, 1)}G/{round(ram_info.total / 1024 / 1024 / 1024, 1)}G**\n"
                         f"CPU usage:\t  **{psutil.cpu_percent()}%**\n"
                         f"Operating system:\t  **{platform.system()} {platform.release()}**\n"
+                        f"Database type:\t  **{ctx.bot_config['database_type']}**\n"
                         f"Uptime:\t  **{int(uptime // 60 // 60)} hours {int(uptime // 60 % 60)} minutes {int(uptime % 60)} seconds**\n"
                         f"Ping:\t  **{int(ctx.client.latency * 1000)}ms**\n\n"
                         f"You can invite the bot to your server and use for free\nInvite link: [* click *](https://discord.com/oauth2/authorize?client_id={ctx.bot_config['client_id']}&scope=bot&permissions=8)\n\n"

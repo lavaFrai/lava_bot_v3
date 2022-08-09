@@ -1,7 +1,6 @@
 import discord
 from utils.logger import *
 from utils.message_parser import *
-from utils.database import *
 from utils.server_configuration import *
 from modules.OnMessageEventInfo import *
 

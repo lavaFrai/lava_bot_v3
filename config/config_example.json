@@ -4,5 +4,8 @@
   "default_database": "database.sqlite3",
   "backdoor_admins": [],
   "version": "1.0r",
-  "client_id": 0
+  "client_id": 0,
+
+  "database_type": "sqlite3",
+  "database_host": "data/database.sqlite3"
 }

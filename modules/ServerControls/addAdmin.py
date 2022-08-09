@@ -2,7 +2,6 @@ import discord
 
 from modules.Module import *
 from utils.message_parser import *
-from utils.database import *
 from utils.server_configuration import *
 from utils.ping_parser import ParsePing
 from utils.embed import *
