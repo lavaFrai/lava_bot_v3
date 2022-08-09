@@ -15,5 +15,5 @@
 
    or alternative version:
     ```bash
-    docker run -it -d $(docker build -q .)
+    docker run -it -d --restart=always $(docker build -q .)
     ```

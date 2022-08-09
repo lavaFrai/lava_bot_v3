@@ -2,4 +2,4 @@ chardet>=4.0.0
 hmtai==3.1.0
 discord>=1.7.3
 psutil>=5.9.1
-psycopg2>=2.8.1
+psycopg2-binary>=2.9.3
