@@ -1,11 +1,7 @@
-import discord
-
 from modules.Module import *
-from utils.server_configuration import *
-from utils.typical_answers import *
 from utils.ping_parser import *
 from utils.embed import *
-from utils.sudoMiddleware import *
+from utils.middleware.sudoMiddleware import *
 
 
 class BanMember(Module):

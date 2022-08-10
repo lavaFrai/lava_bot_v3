@@ -1,7 +1,4 @@
-import discord
-
-from modules.OnMessageEventInfo import OnMessageEventInfo
-from utils.server_configuration import ServerConfiguration
+from utils.event.OnMessageEventInfo import OnMessageEventInfo
 
 
 class MessageParser:

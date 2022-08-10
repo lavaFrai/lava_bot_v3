@@ -1,9 +1,6 @@
 import json
-import time
 
-import discord
-
-from modules.OnMessageEventInfo import *
+from utils.event.OnMessageEventInfo import *
 
 
 class Embed(discord.Embed):

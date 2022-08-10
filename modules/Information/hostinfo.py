@@ -36,6 +36,6 @@ class HostInfo(Module):
                         f"Uptime:\t  **{int(uptime // 60 // 60)} hours {int(uptime // 60 % 60)} minutes {int(uptime % 60)} seconds**\n"
                         f"Ping:\t  **{int(ctx.client.latency * 1000)}ms**\n\n"
                         f"You can invite the bot to your server and use for free\nInvite link: [* click *](https://discord.com/oauth2/authorize?client_id={ctx.bot_config['client_id']}&scope=bot&permissions=8)\n\n"
-                        f"Developer:\t  [**lava_frai#0498**](https://discordapp.com/users/677933625802489889/)\n"
+                        f"Developer:\t  [lava_frai#0498](https://discordapp.com/users/677933625802489889/)\n"
                         f"(c)lava_frai 2021-{time.strftime('%Y')}",
         ))

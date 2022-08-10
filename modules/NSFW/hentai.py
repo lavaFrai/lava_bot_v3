@@ -1,15 +1,6 @@
-import random
-
-import discord
-import hmtai
-
 from modules.Module import *
-from utils.server_configuration import *
-from utils.typical_answers import *
-from utils.ping_parser import *
 from utils.hentai import *
-from utils.embed import *
-from utils.nsfwMiddleware import *
+from utils.middleware.nsfwMiddleware import *
 
 
 class Hentai(Module):

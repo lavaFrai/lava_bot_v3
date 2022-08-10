@@ -5,6 +5,7 @@ from modules.ServerControls.prefix import SetPrefix
 from modules.ServerControls.addAdmin import AdminControls
 from modules.Moderation.Kick import *
 from modules.Moderation.Ban import *
+from modules.Moderation.roleByReaction import *
 from modules.NSFW.hentai import *
 from modules.Utilites.Avatar import *
 from modules.Utilites.Random import *
@@ -27,6 +28,7 @@ class ModuleManager:
         # Moderation
         self.Modules.append(KickMember())
         self.Modules.append(BanMember())
+        self.Modules.append(RoleByReaction())
         # self.Modules.append(MuteMember())
 
         # Information

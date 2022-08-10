@@ -9,6 +9,10 @@ import discord
 import os
 from modules.ModuleManager import *
 from utils.server_configuration import *
+from utils.event.OnReactionAddEventInfo import *
+from utils.event.OnMessageRemoveEventInfo import *
+from utils.event.OnReactionRemoveEventInfo import *
+from utils.event.OnMessageEventInfo import *
 
 
 class LavaBot:
@@ -41,6 +45,9 @@ class LavaBot:
         self.client.event(self.on_ready)
         # self.client.event(self.on_error)
         self.client.event(self.on_message)
+        self.client.event(self.on_raw_message_delete)
+        self.client.event(self.on_raw_reaction_add)
+        self.client.event(self.on_raw_reaction_remove)
 
         self.logger.Log("Registering bot modules")
         self.modules = ModuleManager()
@@ -78,6 +85,11 @@ class LavaBot:
                                         prefix TEXT,
                                         admin  TEXT
                                     );""")
+        self.database.send("""create table if not exists cache
+                                    (
+                                        moduleid    TEXT,
+                                        value      TEXT
+                                    );""")
         self.database.save()
 
         return True
@@ -102,6 +114,31 @@ class LavaBot:
                 if module is not None:
                     context = OnMessageEventInfo(ctx, self.client, self.database, self.config, server_config, module)
                     await module.on_message(context)
+                    module.save_cache(context)
+
+    async def on_raw_message_delete(self, ctx: discord.RawMessageDeleteEvent):
+        self.logger.Debug(f"Received message removing from server {ctx.guild_id}")
+
+        for module in self.modules.Modules:
+            if module.on_reaction_remove is not None:
+                context = OnMessageRemoveEventInfo(ctx, self.client, self.database, self.config, module)
+                await module.on_message_delete(context)
+
+    async def on_raw_reaction_add(self, ctx: discord.RawReactionActionEvent):
+        self.logger.Debug(f"Received reaction from server {ctx.guild_id} by user {ctx.user_id}")
+
+        for module in self.modules.Modules:
+            if module.on_reaction_add is not None:
+                context = OnReactionAddEventInfo(ctx, self.client, self.database, self.config, module)
+                await module.on_reaction_add(context)
+
+    async def on_raw_reaction_remove(self, ctx: discord.RawReactionActionEvent):
+        self.logger.Debug(f"Received reaction removing from server {ctx.guild_id} by user {ctx.user_id}")
+
+        for module in self.modules.Modules:
+            if module.on_reaction_remove is not None:
+                context = OnReactionRemoveEventInfo(ctx, self.client, self.database, self.config, module)
+                await module.on_reaction_remove(context)
 
     def Run(self):
         try:

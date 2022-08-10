@@ -1,8 +1,10 @@
-import discord
+from utils.event import OnReactionAddEventInfo
+from utils.event.OnMessageRemoveEventInfo import OnMessageRemoveEventInfo
 from utils.logger import *
 from utils.message_parser import *
 from utils.server_configuration import *
-from modules.OnMessageEventInfo import *
+from utils.event.OnMessageEventInfo import *
+from utils.b64 import *
 
 
 class Module:
@@ -20,6 +22,8 @@ class Module:
         self.description = description
         self.examples: str = examples
         self.parse: MessageParser = None
+        self.cache: dict = {}
+        self.moduleid = f"{b64toBytes(self.category)}:{b64toBytes(self.name)}"
 
         self.aliases = aliases
         if aliases is not None:
@@ -36,4 +40,26 @@ class Module:
 
     def on_message(self, ctx: OnMessageEventInfo):
         self.parse = MessageParser(ctx)
+        self.load_cache(ctx)
         self.logger.Log(f"Handling command {ctx.message.content} by user {ctx.message.author.id} on server {ctx.message.guild.id}")
+
+    async def on_message_delete(self, ctx: OnMessageRemoveEventInfo):
+        pass
+
+    async def on_reaction_add(self, ctx: OnReactionAddEventInfo):
+        pass
+
+    async def on_reaction_remove(self, ctx: OnReactionAddEventInfo):
+        pass
+
+    def load_cache(self, ctx: OnMessageEventInfo):
+        temporary_data = ctx.database.get(f"SELECT value FROM cache WHERE moduleid='{self.moduleid}'")
+        if len(temporary_data) == 0:
+            ctx.database.send(f"INSERT INTO cache (moduleid, value) VALUES ('{self.moduleid}', '{b64toBytes(json.dumps(self.cache))}')")
+            ctx.database.save()
+        temporary_data = ctx.database.get(f"SELECT value FROM cache WHERE moduleid='{self.moduleid}'")
+        self.cache = json.loads(b64fromBytes(temporary_data[0][0]))
+
+    def save_cache(self, ctx: OnMessageEventInfo):
+        ctx.database.send(f"UPDATE cache SET value='{b64toBytes(json.dumps(self.cache))}' WHERE moduleid='{self.moduleid}'")
+        ctx.database.save()

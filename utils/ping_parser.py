@@ -1,4 +1,5 @@
-from modules.OnMessageEventInfo import OnMessageEventInfo
+import discord
+
 from utils.message_parser import *
 
 

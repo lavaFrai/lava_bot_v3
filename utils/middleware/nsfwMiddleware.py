@@ -1,6 +1,5 @@
-from modules.OnMessageEventInfo import OnMessageEventInfo
+from utils.event.OnMessageEventInfo import OnMessageEventInfo
 from utils.embed import Embed
-from utils.typical_answers import TypicalAnswers
 from functools import wraps
 
 
