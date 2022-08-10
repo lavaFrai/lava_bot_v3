@@ -1,7 +1,6 @@
 {
   "token": "enter_your_token",
   "default_prefix": "!",
-  "default_database": "database.sqlite3",
   "backdoor_admins": [],
   "version": "1.0r",
   "client_id": 0,
