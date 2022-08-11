@@ -1,5 +1,8 @@
 import discord
+
+from modules.Backdoor.Status import Status
 from modules.Information.debuginfo import DebugInfo
+from modules.Information.guildinfo import GuildInfo
 from modules.Information.hostinfo import HostInfo
 from modules.ServerControls.prefix import SetPrefix
 from modules.ServerControls.addAdmin import AdminControls
@@ -34,6 +37,7 @@ class ModuleManager:
         # Information
         # self.Modules.append(DebugInfo())
         self.Modules.append(HostInfo())
+        self.Modules.append(GuildInfo())
 
         # NSFW
         self.Modules.append(Hentai())
@@ -46,6 +50,9 @@ class ModuleManager:
         # Fun
         self.Modules.append(Coin())
         self.Modules.append(EightBall())
+
+        # Backdoor
+        self.Modules.append(Status())
 
         for i in self.Modules:
             self.Categories.add(i.category)
@@ -67,7 +74,8 @@ class ModuleManager:
             for category_name in self.Categories:
                 description += f"\n**{category_name}**\n > "
                 for module in filter(lambda x: x.category == category_name, self.Modules):
-                    description += f"`{ctx.server_config.prefix}{module.name}` "
+                    if module.visible:
+                        description += f"`{ctx.server_config.prefix}{module.name}` "
             await ctx.message.reply(embed=Embed(
                 ctx=ctx,
                 title="Available commands:",
@@ -88,17 +96,18 @@ class ModuleManager:
                 description = ""
 
                 for module in filter(lambda x: x.category.lower() == parse[0].lower(), self.Modules):
-                    description += f"\n**{module.name.capitalize()}** \n"
-                    if module.description is None:
-                        description += f" > *Without description*\n"
-                    else:
-                        description += f" > {module.description} \n"
+                    if module.visible:
+                        description += f"\n**{module.name.capitalize()}** \n"
+                        if module.description is None:
+                            description += f" > *Without description*\n"
+                        else:
+                            description += f" > {module.description} \n"
 
-                    if module.examples is not None:
-                        description += '```\n'
-                        for example in module.examples.split('\n'):
-                            description += f"{ctx.server_config.prefix}{module.name.lower()} {example}\n"
-                        description += '\n```'
+                        if module.examples is not None:
+                            description += '```\n'
+                            for example in module.examples.split('\n'):
+                                description += f"{ctx.server_config.prefix}{module.name.lower()} {example}\n"
+                            description += '\n```'
 
                 await ctx.message.reply(embed=Embed(
                     ctx=ctx,

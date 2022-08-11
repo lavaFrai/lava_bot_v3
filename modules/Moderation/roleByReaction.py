@@ -38,6 +38,9 @@ class RoleByReaction(Module):
     async def on_reaction_add(self, ctx: OnReactionAddEventInfo):
         super().load_cache(ctx)
 
+        if ctx.reaction.user_id == ctx.client.user.id:
+            return
+
         if str(ctx.reaction.message_id) not in self.cache:
             return
 
@@ -54,8 +57,8 @@ class RoleByReaction(Module):
             await message.edit(embed=Embed(
                 ctx=ctx,
                 title=f"Role by reaction",
-                description=f"Reaction: {ctx.reaction.emoji} \n"
-                            f"Role: {ctx.guild.get_role(self.cache[str(ctx.reaction.message_id)]['role']).mention}"
+                description=f"**Reaction:** {ctx.reaction.emoji} \n"
+                            f"**Role:** {ctx.guild.get_role(self.cache[str(ctx.reaction.message_id)]['role']).mention}"
             ))
 
             while self.cache[str(ctx.reaction.message_id)]["emoji"] != reaction:
@@ -80,6 +83,9 @@ class RoleByReaction(Module):
 
     async def on_reaction_remove(self, ctx: OnReactionRemoveEventInfo):
         super().load_cache(ctx)
+
+        if ctx.reaction.user_id == ctx.client.user.id:
+            return
 
         if str(ctx.reaction.message_id) not in self.cache:
             return

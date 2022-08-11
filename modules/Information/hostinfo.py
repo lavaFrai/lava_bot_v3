@@ -10,7 +10,8 @@ import sys
 
 class HostInfo(Module):
     def __init__(self):
-        super().__init__("info", Module.MODULE_CATEGORY_INFORMATION)
+        super().__init__("info", Module.MODULE_CATEGORY_INFORMATION,
+                         description="Get information about the bot")
 
     async def on_message(self, ctx: OnMessageEventInfo):
         super().on_message(ctx)

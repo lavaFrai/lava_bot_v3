@@ -3,11 +3,11 @@ from utils.typical_answers import TypicalAnswers
 from functools import wraps
 
 
-def onlySudoMiddleware(func):
+def onlyBackdoorMiddleware(func):
     @wraps(func)
     async def wrapper(self, ctx: OnMessageEventInfo):
-        if ctx.server_config.IsUserAdmin(ctx.message.author.id) or ctx.message.author.guild_permissions.administrator:
+        if ctx.message.author.id in ctx.bot_config["backdoor_admins"]:
             await func(self, ctx)
         else:
-            await TypicalAnswers.NeedAdmin(ctx.module.title, ctx)
+            pass
     return wrapper

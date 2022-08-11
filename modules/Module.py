@@ -1,9 +1,10 @@
-from utils.event import OnReactionAddEventInfo
+from utils.event import OnReactionAddEventInfo, OnReadyEventInfo
 from utils.event.OnMessageRemoveEventInfo import OnMessageRemoveEventInfo
 from utils.logger import *
 from utils.message_parser import *
 from utils.server_configuration import *
 from utils.event.OnMessageEventInfo import *
+from utils.event.OnReadyEventInfo import *
 from utils.b64 import *
 
 
@@ -15,7 +16,14 @@ class Module:
     MODULE_CATEGORY_FUN = "Fun"
     MODULE_CATEGORY_UTILITY = "Utility"
 
-    def __init__(self, name: str, category: str, description: str = None, examples: list = None, aliases=None, title: str = None):
+    def __init__(self,
+                 name: str,
+                 category: str,
+                 description: str = None,
+                 examples: list = None,
+                 aliases=None,
+                 title: str = None,
+                 visible: bool = True):
         self.logger = Logger(Logger.LOG_LEVEL_DEBUG)
         self.name = name
         self.category = category
@@ -23,6 +31,7 @@ class Module:
         self.examples: str = examples
         self.parse: MessageParser = None
         self.cache: dict = {}
+        self.visible = visible
         self.moduleid = f"{b64toBytes(self.category)}:{b64toBytes(self.name)}"
 
         self.aliases = aliases
@@ -37,6 +46,9 @@ class Module:
         if self.aliases is None:
             return name.lower() == self.name
         return name.lower() in self.aliases or name.lower() == self.name
+
+    async def on_ready(self, ctx: OnReadyEventInfo):
+        pass
 
     def on_message(self, ctx: OnMessageEventInfo):
         self.parse = MessageParser(ctx)

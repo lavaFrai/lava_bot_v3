@@ -9,6 +9,7 @@ import discord
 import os
 from modules.ModuleManager import *
 from utils.server_configuration import *
+from utils.event.OnReadyEventInfo import *
 from utils.event.OnReactionAddEventInfo import *
 from utils.event.OnMessageRemoveEventInfo import *
 from utils.event.OnReactionRemoveEventInfo import *
@@ -99,6 +100,12 @@ class LavaBot:
 
     async def on_ready(self):
         self.logger.Log(f"Login successfully as {self.client.user.name}#{self.client.user.discriminator}")
+        self.logger.Log(f"Running OnReady events")
+        for module in self.modules.Modules:
+            if module.on_ready is not None:
+                context = OnReadyEventInfo(self.client, self.database, self.config, module)
+                await module.on_ready(context)
+        self.logger.Log(f"OnReady events finished")
 
     async def on_message(self, ctx: discord.Message):
         server_config = ServerConfiguration(ctx, self.database, self.config)
