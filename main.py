@@ -1,9 +1,7 @@
 # https://discord.com/oauth2/authorize?client_id=811539043778297857&scope=bot&permissions=8
-import prerun_checker
+import utils.prerun_checker
 
 from utils.dbDriver.postgesql import BotDatabasePostgresql
-from utils.dbDriver.sqlite import BotDatabaseSqlite
-from utils.logger import *
 from modules.ModuleManager import *
 from utils.server_configuration import *
 from utils.event.OnReadyEventInfo import *
@@ -15,7 +13,6 @@ from utils.event.OnMessageEventInfo import *
 import json
 
 import discord
-import os
 
 
 class LavaBot:
@@ -30,8 +27,6 @@ class LavaBot:
     def __init__(self, config_file="config/config.json"):
         self.logger = Logger(Logger.LOG_LEVEL_DEBUG)
         self.status = self.LOAD_STATUS_FAIL
-
-        self.logger.Log("Checking system requirements")
 
         # loading bot configuration
         try:
