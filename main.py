@@ -34,6 +34,17 @@ class LavaBot:
         self.logger = Logger(Logger.LOG_LEVEL_DEBUG)
         self.status = self.LOAD_STATUS_FAIL
 
+        self.logger.Log("Checking system requirements")
+
+        requirements_checker_result = SystemRequirementsChecker.check_system_requirements()
+
+        if not requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_OK:
+            if requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_INVALID_INTERPRETER_VERSION:
+                self.logger.Error("Minimal supported version of python interpreter is " + '.'.join(map(str, SystemRequirementsChecker.MINIMAL_PYTHON_VERSION)))
+            elif requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_ERROR_CAN_NOT_IMPORT_MODULES:
+                self.logger.Error("Can not import modules, please run command: \"pip install -r requirements.txt\"")
+            return
+
         # loading bot configuration
         try:
             self.logger.Log("Loading configuration")
@@ -72,15 +83,6 @@ class LavaBot:
             self.logger.Warning("Not found database")
         self.logger.Log("Checking database tables")
         """
-        self.logger.Log("Checking system requirements")
-
-        requirements_checker_result = SystemRequirementsChecker.check_system_requirements()
-
-        if not requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_OK:
-            if requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_INVALID_INTERPRETER_VERSION:
-                self.logger.Error("Minimal supported version of python interpreter is " + '.'.join(map(str, SystemRequirementsChecker.MINIMAL_PYTHON_VERSION)))
-            elif requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_ERROR_CAN_NOT_IMPORT_MODULES:
-                self.logger.Error("Can not import modules, please run command: \"pip install -r requirements.txt\"")
 
         self.logger.Log("Running database self check")
 
