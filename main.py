@@ -1,12 +1,10 @@
 # https://discord.com/oauth2/authorize?client_id=811539043778297857&scope=bot&permissions=8
-import json
+from utils.system_requirements import SystemRequirementsChecker
+
 
 from utils.dbDriver.postgesql import BotDatabasePostgresql
 from utils.dbDriver.sqlite import BotDatabaseSqlite
-
 from utils.logger import *
-import discord
-import os
 from modules.ModuleManager import *
 from utils.server_configuration import *
 from utils.event.OnReadyEventInfo import *
@@ -14,6 +12,13 @@ from utils.event.OnReactionAddEventInfo import *
 from utils.event.OnMessageRemoveEventInfo import *
 from utils.event.OnReactionRemoveEventInfo import *
 from utils.event.OnMessageEventInfo import *
+
+
+def import_external_modules():
+    import json
+
+    import discord
+    import os
 
 
 class LavaBot:
@@ -67,6 +72,16 @@ class LavaBot:
             self.logger.Warning("Not found database")
         self.logger.Log("Checking database tables")
         """
+        self.logger.Log("Checking system requirements")
+
+        requirements_checker_result = SystemRequirementsChecker.check_system_requirements()
+
+        if not requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_OK:
+            if requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_INVALID_INTERPRETER_VERSION:
+                self.logger.Error("Minimal supported version of python interpreter is " + '.'.join(map(str, SystemRequirementsChecker.MINIMAL_PYTHON_VERSION)))
+            elif requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_ERROR_CAN_NOT_IMPORT_MODULES:
+                self.logger.Error("Can not import modules, please run command: \"pip install -r requirements.txt\"")
+
         self.logger.Log("Running database self check")
 
         if self.config["database_type"] not in self.DATABASE_DRIVERS:
