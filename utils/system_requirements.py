@@ -8,7 +8,7 @@ class SystemRequirementsChecker:
     SYSTEM_REQUIREMENTS_ERROR_CAN_NOT_IMPORT_MODULES = 1
     SYSTEM_REQUIREMENTS_INVALID_INTERPRETER_VERSION = 2
 
-    MINIMAL_PYTHON_VERSION = (3, 6)
+    MINIMAL_PYTHON_VERSION = (3, 7)
 
     @staticmethod
     def check_system_requirements():
