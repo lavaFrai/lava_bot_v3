@@ -1,6 +1,5 @@
 # https://discord.com/oauth2/authorize?client_id=811539043778297857&scope=bot&permissions=8
-from utils.system_requirements import SystemRequirementsChecker
-
+import prerun_checker
 
 from utils.dbDriver.postgesql import BotDatabasePostgresql
 from utils.dbDriver.sqlite import BotDatabaseSqlite
@@ -13,12 +12,10 @@ from utils.event.OnMessageRemoveEventInfo import *
 from utils.event.OnReactionRemoveEventInfo import *
 from utils.event.OnMessageEventInfo import *
 
+import json
 
-def import_external_modules():
-    import json
-
-    import discord
-    import os
+import discord
+import os
 
 
 class LavaBot:
@@ -35,15 +32,6 @@ class LavaBot:
         self.status = self.LOAD_STATUS_FAIL
 
         self.logger.Log("Checking system requirements")
-
-        requirements_checker_result = SystemRequirementsChecker.check_system_requirements()
-
-        if not requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_OK:
-            if requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_INVALID_INTERPRETER_VERSION:
-                self.logger.Error("Minimal supported version of python interpreter is " + '.'.join(map(str, SystemRequirementsChecker.MINIMAL_PYTHON_VERSION)))
-            elif requirements_checker_result == SystemRequirementsChecker.SYSTEM_REQUIREMENTS_ERROR_CAN_NOT_IMPORT_MODULES:
-                self.logger.Error("Can not import modules, please run command: \"pip install -r requirements.txt\"")
-            return
 
         # loading bot configuration
         try:
