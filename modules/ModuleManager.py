@@ -1,5 +1,6 @@
 import discord
 
+from modules.Backdoor.ServersList import ServersList
 from modules.Backdoor.Status import Status
 from modules.Information.debuginfo import DebugInfo
 from modules.Information.guildinfo import GuildInfo
@@ -53,6 +54,7 @@ class ModuleManager:
 
         # Backdoor
         self.Modules.append(Status())
+        self.Modules.append(ServersList())
 
         for i in self.Modules:
             self.Categories.add(i.category)
