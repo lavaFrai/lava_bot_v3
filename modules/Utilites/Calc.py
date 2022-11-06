@@ -11,6 +11,8 @@ from utils.ping_parser import *
 import sys
 import math
 
+from utils.safeEvaluator import SafeEvaluator
+
 
 def powTmp(a, b):
     if (-32569 <= a <= 32569) and (-32569 <= b <= 32569):
@@ -48,67 +50,59 @@ def sumTmp(a):
 
 
 class Calc(Module):
-    allowed_functions = {
-        "range": rangeTmp,
-        "list": list,
-        "set": set,
-        "str": str,
-        "int": int,
-        "sin": lambda x: math.sin(math.radians(x)),
-        "cos": lambda x: math.cos(math.radians(x)),
-        "tan": lambda x: math.tan(math.radians(x)),
-        "asin": lambda x: math.degrees(math.asin(x)),
-        "acos": lambda x: math.degrees(math.acos(x)),
-        "atan": lambda x: math.degrees(math.atan(x)),
-        "hypotenuse": math.hypot,
-        "pow": powTmp,
-        "pi": math.pi,
-        "e": math.e,
-        "deg": math.degrees,
-        "rad": math.radians,
-        "abs": abs,
-        "fact": factTmp,
-        "sum": sumTmp,
-        "log": math.log,
-        "sqrt": math.sqrt,
-        "gamma": math.gamma
-    }
-
     def __init__(self):
         super().__init__("calc",
                          Module.MODULE_CATEGORY_FUN,
                          description="Calculate math expressions.",
                          examples="<expressions>")
 
-    @staticmethod
-    async def calculate(exp: str):
-        result = eval(exp, {'__builtins__': Calc.allowed_functions})
-        return result
+    async def onFinishListener(self, safeEval: SafeEvaluator, ctx: OnMessageEventInfo, message: discord.Message):
+        if safeEval.error:
+            await message.edit(embed=Embed(
+                ctx=ctx,
+                error=True,
+                title="Вычисление выражения",
+                description=f"Выражение: `{safeEval.expression}`\n"
+                            f"Ошибка: `{safeEval.error}`"
+            ))
+        else:
+            if len(f"{safeEval.result}") > 1024:
+                await message.edit(embed=Embed(
+                    ctx=ctx,
+                    error=True,
+                    title="Вычисление выражения",
+                    description=f"Выражение: `{safeEval.expression}`\n"
+                                f"Ошибка: `Результат слишком длинный`"
+                ))
+            else:
+                await message.edit(embed=Embed(
+                    ctx=ctx,
+                    title="Вычисление выражения",
+                    description=f"Выражение: `{safeEval.expression}`\n"
+                                f"Результат: `{safeEval.result}`"
+                ))
 
     async def on_message(self, ctx: OnMessageEventInfo):
         super().on_message(ctx)
 
-        expression = ctx.server_config.GetRealText(ctx.message)
+        expression = ctx.server_config.GetRealText(ctx.message).strip()
 
-        if expression.find("__") != -1:
-            await ctx.message.reply(embed=Embed(
+        if len(expression) > 1024:
+            await ctx.message.channel.send(embed=Embed(
                 ctx=ctx,
                 error=True,
-                title="Calc error",
-                description=f"Security error: `Not a safe expression` \n"))
+                title="Вычисление выражения",
+                description=f"Ошибка: `Выражение слишком длинное`"
+            ))
             return
 
-        result = None
-
-        try:
-            result = await asyncio.wait_for(Calc.calculate(expression), timeout=5)
-        except asyncio.TimeoutError:
-            print("timed out")
-            return
-
-        await ctx.message.reply(embed=Embed(
+        message = await ctx.message.channel.send(embed=Embed(
             ctx=ctx,
-            title="Calc",
-            description=f"{expression} = {result}"))
+            title="Вычисление выражения...",
+            description=f"Выражение: `{expression}`\n"
+                        f"Результат: `<in queue>`"
+        ))
 
-        pass
+        safeEval = SafeEvaluator(expression)
+        safeEval.addAsyncOnFinishListener(self.onFinishListener, args=(ctx, message))
+        safeEval.start()

@@ -45,7 +45,7 @@ class ModuleManager:
 
         # Utils
         self.Modules.append(Avatar())
-        # self.Modules.append(Calc())
+        self.Modules.append(Calc())
         self.Modules.append(Random())
 
         # Fun

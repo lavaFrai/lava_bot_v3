@@ -1,5 +1,7 @@
 # https://discord.com/oauth2/authorize?client_id=811539043778297857&scope=bot&permissions=8
-import utils.prerun_checker
+
+if __name__ == "__main__":
+    import utils.prerun_checker
 
 from utils.dbDriver.postgesql import BotDatabasePostgresql
 from modules.ModuleManager import *
@@ -155,9 +157,10 @@ class LavaBot:
             self.logger.Error("Failed to login by token")
 
 
-bot = LavaBot()
-if bot.status == LavaBot.LOAD_STATUS_FAIL:
-    exit(-1)
-if not bot.SelfCheck():
-    exit(-2)
-bot.Run()
+if __name__ == "__main__":
+    bot = LavaBot()
+    if bot.status == LavaBot.LOAD_STATUS_FAIL:
+        exit(-1)
+    if not bot.SelfCheck():
+        exit(-2)
+    bot.Run()
