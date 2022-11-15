@@ -80,7 +80,7 @@ class SafeEvaluator:
     def asyncThread(self):
         evaluateProcess = multiprocessing.Process(target=_eval, args=(self.result, self.expression))
         evaluateProcess.start()
-        evaluateProcess.join(timeout=2)
+        evaluateProcess.join(timeout=1)
         time.sleep(0.1)
         if not evaluateProcess.is_alive():
             self.error = self.result.get()
@@ -119,10 +119,3 @@ def onFinishedListener(callbackCtx):
         print("Error: " + str(callbackCtx.error))
     else:
         print(callbackCtx.result)
-
-
-if __name__ == "__main__":
-    safe = SafeEvaluator("__2+2")
-    safe.addOnFinishListener(onFinishedListener)
-    safe.start()
-    while True: ...
