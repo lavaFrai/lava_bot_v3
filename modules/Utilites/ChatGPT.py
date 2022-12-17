@@ -49,11 +49,11 @@ class ChatGPT(Module):
         prompt = ctx.server_config.GetRealText(ctx.message).strip()
         answer = self.get_answer(prompt, api_key)
 
-        #answer.replace("<code>", "```\n")
-        #answer.replace("</code>", "\n```")
+        answer.replace("<code>", "```\n")
+        answer.replace("</code>", "\n```")
 
-        # await ctx.message.reply(content=answer)
+        await ctx.message.reply(content=answer)
 
-        await ctx.message.reply(embed=Embed(ctx=ctx,
-                                            title="ChatGPT",
-                                            description="```\n" + answer + "```"))
+        # await ctx.message.reply(embed=Embed(ctx=ctx,
+        #                                     title="ChatGPT",
+        #                                     description="```\n" + answer + "```"))
