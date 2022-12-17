@@ -52,7 +52,7 @@ class ChatGPT(Module):
         answer.replace("<code>", "```\n")
         answer.replace("</code>", "\n```")
 
-        await ctx.message.reply(content=answer)
+        await ctx.message.reply(content="ChatGPT:\n" + answer)
 
         # await ctx.message.reply(embed=Embed(ctx=ctx,
         #                                     title="ChatGPT",
