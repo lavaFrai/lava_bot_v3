@@ -10,7 +10,7 @@ class Embed(discord.Embed):
             # self.set_author(name=ctx.author.display_name,
             #                 icon_url=ctx.author.avatar_url)
             self.set_footer(text=f"Executed for {ctx.message.author.display_name} | {ctx.client.user.name}",
-                            icon_url=ctx.message.author.avatar_url)
+                            icon_url=ctx.message.author.avatar.url)
 
         with open("config/colors.json", 'r') as f:
             colors = json.JSONDecoder().decode(f.read())

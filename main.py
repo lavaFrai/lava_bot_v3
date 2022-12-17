@@ -41,7 +41,7 @@ class LavaBot:
 
         # creating discord client
         self.logger.Log("Creating discord.client object")
-        self.client = discord.Client(self_bot=True, intents=discord.Intents(messages=True, guilds=True, reactions=True))
+        self.client = discord.Client(self_bot=True, intents=discord.Intents.all())
 
         self.logger.Log("Registering bot events")
         self.client.event(self.on_ready)
