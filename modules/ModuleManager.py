@@ -14,6 +14,7 @@ from modules.NSFW.hentai import *
 from modules.Utilites.Avatar import *
 from modules.Utilites.Random import *
 from modules.Utilites.Calc import *
+from modules.Utilites.ChatGPT import *
 from modules.Fun.Coin import *
 from modules.Fun.EightBall import *
 from utils.server_configuration import *
@@ -47,6 +48,7 @@ class ModuleManager:
         self.Modules.append(Avatar())
         self.Modules.append(Calc())
         self.Modules.append(Random())
+        self.Modules.append(ChatGPT())
 
         # Fun
         self.Modules.append(Coin())
