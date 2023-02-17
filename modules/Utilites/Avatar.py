@@ -14,7 +14,7 @@ class Avatar(Module):
         super().__init__("avatar",
                          Module.MODULE_CATEGORY_UTILITY,
                          description="Sends the avatar of a user",
-                         examples="<member_ping>")
+                         examples=["<member_ping>"])
 
     async def on_message(self, ctx: OnMessageEventInfo):
         super().on_message(ctx)
@@ -31,4 +31,4 @@ class Avatar(Module):
                 ctx=ctx,
                 title=f"Avatar of {ctx.message.mentions[0].name}",
                 description=f"",
-            ).set_image(url=(await ParsePing.GetFirstMention(ctx)).avatar_url))
+            ).set_image(url=(await ParsePing.GetFirstMention(ctx)).avatar.url))
