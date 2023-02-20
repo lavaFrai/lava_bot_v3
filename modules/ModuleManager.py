@@ -1,8 +1,5 @@
-import discord
-
 from modules.Backdoor.ServersList import ServersList
 from modules.Backdoor.Status import Status
-from modules.Information.debuginfo import DebugInfo
 from modules.Information.guildinfo import GuildInfo
 from modules.Information.hostinfo import HostInfo
 from modules.ServerControls.prefix import SetPrefix
@@ -14,10 +11,10 @@ from modules.NSFW.hentai import *
 from modules.Utilites.Avatar import *
 from modules.Utilites.Random import *
 from modules.Utilites.Calc import *
-from modules.Utilites.ChatGPT import *
+from modules.AI.ChatGPT import *
+from modules.AI.Dalle2 import *
 from modules.Fun.Coin import *
 from modules.Fun.EightBall import *
-from utils.server_configuration import *
 from utils.embed import *
 
 
@@ -49,6 +46,7 @@ class ModuleManager:
         self.Modules.append(Calc())
         self.Modules.append(Random())
         self.Modules.append(ChatGPT())
+        self.Modules.append(Dalle2())
 
         # Fun
         self.Modules.append(Coin())
