@@ -45,14 +45,19 @@ class ChatGPT(Module):
     async def on_message(self, ctx: OnMessageEventInfo):
         super().on_message(ctx)
 
+        msg = await ctx.message.reply(content="*processing*")
+
         api_key = ctx.bot_config["openai_token"]
         prompt = ctx.server_config.GetRealText(ctx.message).strip()
-        answer = self.get_answer(prompt, api_key)
+        try:
+            answer = self.get_answer(prompt, api_key)
 
-        answer.replace("<code>", "```\n")
-        answer.replace("</code>", "\n```")
-
-        await ctx.message.reply(content="ChatGPT:\n" + answer)
+            answer.replace("<code>", "```\n")
+            answer.replace("</code>", "\n```")
+        except Exception:
+            await msg.edit(content="*failed*")
+        else:
+            await msg.edit(content="ChatGPT:\n" + answer)
 
         # await ctx.message.reply(embed=Embed(ctx=ctx,
         #                                     title="ChatGPT",
