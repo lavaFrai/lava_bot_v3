@@ -63,7 +63,7 @@ class ChatGPTNeko(Module):
         except Exception:
             await msg.edit(content="*failed*")
         else:
-            await msg.edit(content="Neko ChatGPT: " + answer[:1980])
+            await msg.edit(content="Neko ChatGPT:\n" + answer[:1980])
 
         # await ctx.message.reply(embed=Embed(ctx=ctx,
         #                                     title="ChatGPT",
