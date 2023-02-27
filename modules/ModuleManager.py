@@ -13,6 +13,11 @@ from modules.Utilites.Random import *
 from modules.Utilites.Calc import *
 from modules.AI.ChatGPT import *
 from modules.AI.Dalle2 import *
+
+from modules.AI.ChatGPTNeko import ChatGPTNeko
+from modules.AI.ChatGPTDan import ChatGPTDan
+from modules.AI.ChatGPTNekoDan import ChatGPTNekoDan
+
 from modules.Fun.Coin import *
 from modules.Fun.EightBall import *
 from utils.embed import *
@@ -46,6 +51,11 @@ class ModuleManager:
         self.Modules.append(Calc())
         self.Modules.append(Random())
         self.Modules.append(ChatGPT())
+
+        self.Modules.append(ChatGPTNeko())
+        self.Modules.append(ChatGPTDan())
+        self.Modules.append(ChatGPTNekoDan())
+
         self.Modules.append(Dalle2())
 
         # Fun
