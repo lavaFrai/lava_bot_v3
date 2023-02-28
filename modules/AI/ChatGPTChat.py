@@ -46,6 +46,7 @@ class ChatGPTChat(Module):
         super().on_message(ctx)
 
         history_size = 20
+        additional_symbols = 48
 
         msg = await ctx.message.reply(content="*processing*")
         history = [message async for message in ctx.message.channel.history(limit=history_size + 2)][2:]
@@ -54,7 +55,7 @@ class ChatGPTChat(Module):
         i = 0
         ln = 0
 
-        while ln + len(prompt) + len(ctx.message.author.name) + 8 < 2000 and i < history_size:
+        while ln + len(prompt) + len(ctx.message.author.name) + 8 + additional_symbols < 2000 and i < history_size:
             ln += len(history[i].content) + len(list(reversed(history))[i].author.name) + 4
             if ln + len(prompt) + len(ctx.message.author.name) + 8 > 2000:
                 ln -= len(history[i].content)
@@ -72,14 +73,12 @@ class ChatGPTChat(Module):
             history.append(ctx.message.author.name + ": " + prompt)
         history.append("ChatGPT: ")
 
-        # print(list(map(lambda x: x.author.name + ": " + x.content, history)))
-        # print(
-        #     "\n".join(list(map(lambda x: x.content, history)))
-        # )
+        query = "\n\n".join(history)
+        query = "*начало беседы*\n" + query
 
-        # print(len("\n\n".join(history)), "\n\n", "\n\n".join(history))
+        print(query)
 
-        answer = self.get_answer("\n\n".join(history), ctx.bot_config["openai_token"])
+        answer = self.get_answer(query, ctx.bot_config["openai_token"])
 
         await msg.edit(content=answer if len(answer) > 0 else "(Nothing to say)")
 
