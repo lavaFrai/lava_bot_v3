@@ -70,7 +70,7 @@ class ChatGPTDan(Module):
         except Exception:
             await msg.edit(content="*failed*")
         else:
-            await msg.edit(content="Dan ChatGPT:\n" + answer[:1980])
+            await msg.edit(content="Dan ChatGPT:\n" + answer[:3950])
 
         # await ctx.message.reply(embed=Embed(ctx=ctx,
         #                                     title="ChatGPT",

@@ -17,6 +17,7 @@ from modules.AI.Dalle2 import *
 from modules.AI.ChatGPTNeko import ChatGPTNeko
 from modules.AI.ChatGPTDan import ChatGPTDan
 from modules.AI.ChatGPTNekoDan import ChatGPTNekoDan
+from modules.AI.ChatGPTChat import ChatGPTChat
 
 from modules.Fun.Coin import *
 from modules.Fun.EightBall import *
@@ -54,6 +55,7 @@ class ModuleManager:
 
         self.Modules.append(ChatGPTNeko())
         self.Modules.append(ChatGPTDan())
+        self.Modules.append(ChatGPTChat())
         self.Modules.append(ChatGPTNekoDan())
 
         self.Modules.append(Dalle2())
