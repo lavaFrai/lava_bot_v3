@@ -1,8 +1,6 @@
 from modules.Module import *
 from utils.embed import *
 
-import sys
-
 
 class GuildInfo(Module):
     def __init__(self):
@@ -26,4 +24,4 @@ class GuildInfo(Module):
                         f"\nVoice channels: **{len(ctx.message.guild.voice_channels)}**"
                         f"\n\nVerification level: **{str(ctx.message.guild.verification_level).capitalize()}**"
                         f"\n\nCreated at: **{time.strftime('%d %b %Y', created_at)}**"
-        ).set_image(url=ctx.message.guild.icon_url))
+        ).set_image(url=ctx.message.guild.icon.url))
