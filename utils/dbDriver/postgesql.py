@@ -39,7 +39,7 @@ class BotDatabasePostgresql(IDatabaseDriver):
     def get(self, query, args=None):
         if type(args) != tuple:
             args = (args,)
-        cursor = self.db.cursor()
+        cursor = self.get_cursor()
 
         try:
             if args is None:
@@ -51,6 +51,22 @@ class BotDatabasePostgresql(IDatabaseDriver):
         return cursor.fetchall()
 
         # return self.get_threadsafe(query, args)
+
+    def get_cursor(self):
+        try:
+            cursor = self.db.cursor()
+        except psycopg2.InterfaceError as e:
+            print('{} - connection will be reset'.format(e))
+            # Close old connection
+            if self.db:
+                self.db.close()
+            conn = None
+            cursor = None
+
+            # Reconnect
+            self.init()
+            cursor = self.db.cursor()
+        return cursor
 
     """
         if type(args) != tuple:
@@ -82,16 +98,16 @@ class BotDatabasePostgresql(IDatabaseDriver):
     #         return self.get_real(query, args)
 
     def send(self, query, args=None):
-        cursor = self.db.cursor()
+        cursor = self.get_cursor()
 
         if type(args) != tuple:
             args = (args,)
 
         try:
             if args is None:
-                self.cursor.execute(query)
+                cursor.execute(query)
             else:
-                self.cursor.execute(query, args)
+                cursor.execute(query, args)
             self.db.commit()
         except pg_errors.InFailedSqlTransaction:
             self.db.rollback()
